@@ -1,0 +1,5 @@
+user1
+password1
+user1@example.com
+London
+YOUR_API_KEY
