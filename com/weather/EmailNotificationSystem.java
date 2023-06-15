@@ -1,52 +1,53 @@
 package com.weather;
 
+import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Base64;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EmailNotificationSystem {
-    private final String host;
-    private final int port;
-    private final String username;
-    private final String password;
+    private final String apiKey;
 
-    public EmailNotificationSystem(String host, int port, String username, String password) {
-        this.host = host;
-        this.port = port;
-        this.username = username;
-        this.password = password;
+    public EmailNotificationSystem(String apiKey) {
+        this.apiKey = apiKey;
     }
 
-    public void sendEmailNotification(String recipient, String subject, String message) {
-        try (Socket socket = new Socket(host, port);
-             OutputStream outputStream = socket.getOutputStream();
-             PrintWriter writer = new PrintWriter(outputStream, true)) {
+    public void sendEmail(String recipient, String subject, String body) throws IOException {
+        URL url = new URL("https://api.elasticemail.com/v2/email/send");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setDoOutput(true);
 
-            String encodedUsername = Base64.getEncoder().encodeToString(username.getBytes());
-            String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("apikey", apiKey);
+        parameters.put("from", "nicolas.riscalas@stu.ocsb.ca");
+        parameters.put("fromName", "Nicolas Riscalas");
+        parameters.put("subject", subject);
+        parameters.put("bodyHtml", body);
+        parameters.put("to", recipient);
+        String requestBody = buildQueryString(parameters);
 
-            // Send initial connection commands
-            writer.printf("EHLO %s\r\n", host);
-            writer.printf("AUTH LOGIN\r\n");
-            writer.printf("%s\r\n", encodedUsername);
-            writer.printf("%s\r\n", encodedPassword);
-
-            // Send email data
-            writer.printf("MAIL FROM:<%s>\r\n", username);
-            writer.printf("RCPT TO:<%s>\r\n", recipient);
-            writer.printf("DATA\r\n");
-            writer.printf("Subject:%s\r\n", subject);
-            writer.printf("\r\n");
-            writer.printf("%s\r\n", message);
-            writer.printf(".\r\n");
-
-            // Close the connection
-            writer.printf("QUIT\r\n");
-
-            System.out.println("Email notification sent successfully!");
-        } catch (Exception e) {
-            System.out.println("Failed to send email notification: " + e.getMessage());
+        try (OutputStream outputStream = connection.getOutputStream()) {
+            byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(requestBodyBytes, 0, requestBodyBytes.length);
         }
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("Email sent. Response code: " + responseCode);
+    }
+
+    private String buildQueryString(Map<String, String> parameters) {
+        StringBuilder queryString = new StringBuilder();
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            queryString.append(key).append('=').append(value).append('&');
+        }
+        queryString.deleteCharAt(queryString.length() - 1); // Remove trailing '&'
+        return queryString.toString();
     }
 }

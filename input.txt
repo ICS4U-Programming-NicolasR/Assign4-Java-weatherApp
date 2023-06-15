@@ -1,5 +1,5 @@
-user1
-password1
-user1@example.com
-London
+Nic
+peralta14
+nriscalas.spam@gmail.com
+Salt Lake City
 YOUR_API_KEY
