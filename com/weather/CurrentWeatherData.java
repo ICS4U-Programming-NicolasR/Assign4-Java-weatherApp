@@ -18,8 +18,7 @@ class CurrentWeatherData extends WeatherData {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
         // creates a new string by taking a substring of the whole output
-        String temperatureString = jsonResponse.substring(
-          startIndex + length, endIndex);
+        String temperatureString = jsonResponse.substring(startIndex + length, endIndex);
         // returns it back to the main code
         return Double.parseDouble(temperatureString);
       }
@@ -35,8 +34,7 @@ class CurrentWeatherData extends WeatherData {
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        String windSpeed = jsonResponse.substring(
-        startIndex + length, endIndex);
+        String windSpeed = jsonResponse.substring(startIndex + length, endIndex);
         return Double.parseDouble(windSpeed);
       }
     }
@@ -92,8 +90,7 @@ class CurrentWeatherData extends WeatherData {
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        String cloudCover = jsonResponse.substring(
-        startIndex + length, endIndex);
+        String cloudCover = jsonResponse.substring(startIndex + length, endIndex);
         return Double.parseDouble(cloudCover);
       }
     }
@@ -103,13 +100,12 @@ class CurrentWeatherData extends WeatherData {
   // the same method as above except for uv level
   public String getUvLevel(final String jsonResponse) {
     final int length = 11;
-    final int five = 5
+    final int five = 5;
     int startIndex = jsonResponse.indexOf("\"uv_index\":");
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        String uvLevelStr = jsonResponse.substring(
-        startIndex + length, endIndex);
+        String uvLevelStr = jsonResponse.substring(startIndex + length, endIndex);
         int uvLevel = Integer.parseInt(uvLevelStr);
         // it does check if it is high low or moderate and returns that instead
         if (uvLevel > five) {
@@ -131,8 +127,7 @@ class CurrentWeatherData extends WeatherData {
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        String visibility = jsonResponse.substring(
-        startIndex + length, endIndex);
+        String visibility = jsonResponse.substring(startIndex + length, endIndex);
         return Double.parseDouble(visibility);
       }
     }
@@ -232,8 +227,7 @@ class CurrentWeatherData extends WeatherData {
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        String description = jsonResponse.substring(
-          startIndex + length, endIndex - 2);
+        String description = jsonResponse.substring(startIndex + length, endIndex - 2);
         return description;
       }
     }
@@ -247,8 +241,7 @@ class CurrentWeatherData extends WeatherData {
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        String feelsLikeString = jsonResponse.substring(
-          startIndex + length, endIndex);
+        String feelsLikeString = jsonResponse.substring(startIndex + length, endIndex);
         return Double.parseDouble(feelsLikeString);
       }
     }

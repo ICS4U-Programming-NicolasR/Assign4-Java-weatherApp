@@ -9,15 +9,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-* EmailNotificationSystem.java
-*
-* @author  Mr. Riscalas
-* @version 1.0
-* @since   2023-06-15
-*/
-
-
+ * EmailNotificationSystem.java.
+ *
+ * @author Mr. Riscalas
+ * @version 1.0
+ * @since 2023-06-15
+ */
 public class EmailNotificationSystem {
+  /**
+   * This is the send email method
+   *
+   * @param recipient // recipient
+   * @param subject // subject
+   * @param body // body
+   */
   private final String apiKey;
 
   // get the api key
@@ -26,20 +31,18 @@ public class EmailNotificationSystem {
   }
 
   /**
-     * This is the send email method
-     *
-     * @param recipient // recipient
-     * @param subject // subject
-     * @param body // body
-     *
-     */
+   * This is the send email method
+   *
+   * @param recipient // recipient
+   * @param subject // subject
+   * @param body // body
+   */
   public void sendEmail(String recipient, String subject, String body) throws IOException {
     // create a url and get a connection to the server
     URL url = new URL("https://api.elasticemail.com/v2/email/send");
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
     connection.setRequestMethod("POST");
-    connection.setRequestProperty(
-        "Content-Type", "application/x-www-form-urlencoded");
+    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
     connection.setDoOutput(true);
     // create a hashmap that has all the needed info for sending an email
     Map<String, String> parameters = new HashMap<>();
