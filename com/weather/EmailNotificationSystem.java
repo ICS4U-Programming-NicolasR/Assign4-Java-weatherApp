@@ -8,46 +8,53 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+// class to send the email to the user
 public class EmailNotificationSystem {
-    private final String apiKey;
+  private final String apiKey;
 
-    public EmailNotificationSystem(String apiKey) {
-        this.apiKey = apiKey;
+  // get the api key
+  public EmailNotificationSystem(String apiKey) {
+    this.apiKey = apiKey;
+  }
+
+  // method for sending the email
+  public void sendEmail(String recipient, String subject, String body) throws IOException {
+    // create a url and get a connection to the server
+    URL url = new URL("https://api.elasticemail.com/v2/email/send");
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+    connection.setDoOutput(true);
+    // create a hashmap that has all the needed info for sending an email
+    Map<String, String> parameters = new HashMap<>();
+    parameters.put("apikey", apiKey);
+    parameters.put("from", "nicolas.riscalas@stu.ocsb.ca");
+    parameters.put("fromName", "Nicolas Riscalas");
+    parameters.put("subject", subject);
+    parameters.put("bodyHtml", body);
+    parameters.put("to", recipient);
+    String requestBody = buildQueryString(parameters);
+
+    // try to get a connection to send the body
+    try (OutputStream outputStream = connection.getOutputStream()) {
+      byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
+      outputStream.write(requestBodyBytes, 0, requestBodyBytes.length);
     }
 
-    public void sendEmail(String recipient, String subject, String body) throws IOException {
-        URL url = new URL("https://api.elasticemail.com/v2/email/send");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.setDoOutput(true);
+    // get the connection responseCode if 200 connection ok
+    int responseCode = connection.getResponseCode();
+    System.out.println("Email sent. Response code: " + responseCode);
+  }
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("apikey", apiKey);
-        parameters.put("from", "nicolas.riscalas@stu.ocsb.ca");
-        parameters.put("fromName", "Nicolas Riscalas");
-        parameters.put("subject", subject);
-        parameters.put("bodyHtml", body);
-        parameters.put("to", recipient);
-        String requestBody = buildQueryString(parameters);
-
-        try (OutputStream outputStream = connection.getOutputStream()) {
-            byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
-            outputStream.write(requestBodyBytes, 0, requestBodyBytes.length);
-        }
-
-        int responseCode = connection.getResponseCode();
-        System.out.println("Email sent. Response code: " + responseCode);
+  // takes the paramaters and creates it into the needed info for the email.
+  private String buildQueryString(Map<String, String> parameters) {
+    StringBuilder queryString = new StringBuilder();
+    for (Map.Entry<String, String> entry : parameters.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      queryString.append(key).append('=').append(value).append('&');
     }
-
-    private String buildQueryString(Map<String, String> parameters) {
-        StringBuilder queryString = new StringBuilder();
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            queryString.append(key).append('=').append(value).append('&');
-        }
-        queryString.deleteCharAt(queryString.length() - 1); // Remove trailing '&'
-        return queryString.toString();
-    }
+    queryString.deleteCharAt(queryString.length() - 1); // Remove trailing '&'
+    return queryString.toString();
+  }
 }
