@@ -1,5 +1,4 @@
-Emma
-emmaishot
-emmacmiranda@gmail.com
+Nicolas
+password
+nicolas.riscalas@stu.ocsb.ca
 Ottawa
-YOUR_API_KEY
