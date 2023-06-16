@@ -103,6 +103,7 @@ class CurrentWeatherData extends WeatherData {
   // the same method as above except for uv level
   public String getUvLevel(final String jsonResponse) {
     final int length = 11;
+    final int five = 5
     int startIndex = jsonResponse.indexOf("\"uv_index\":");
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
@@ -111,7 +112,7 @@ class CurrentWeatherData extends WeatherData {
         startIndex + length, endIndex);
         int uvLevel = Integer.parseInt(uvLevelStr);
         // it does check if it is high low or moderate and returns that instead
-        if (uvLevel > 5) {
+        if (uvLevel > five) {
           return "high! Put on sunscreen!";
         } else if (uvLevel > 2) {
           return "moderate: Sunscreen is recommended";
@@ -181,7 +182,7 @@ class CurrentWeatherData extends WeatherData {
   // the same method as above except for location(needs three things)
   public String getLocation(final String jsonResponse) {
     String city = "";
-    int length = 8;
+    final int length = 8;
     String country = "";
     String region = "";
     int startIndex = jsonResponse.indexOf("\"name\":");
@@ -191,20 +192,20 @@ class CurrentWeatherData extends WeatherData {
         city = jsonResponse.substring(startIndex + length, endIndex - 1);
       }
     }
-    length = 11;
+    final int length11 = 11;
     startIndex = jsonResponse.indexOf("\"country\":");
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        country = jsonResponse.substring(startIndex + length, endIndex - 1);
+        country = jsonResponse.substring(startIndex + length11, endIndex - 1);
       }
     }
-    length = 10;
+    final int length10 = 10;
     startIndex = jsonResponse.indexOf("\"region\":");
     if (startIndex != -1) {
       int endIndex = jsonResponse.indexOf(",", startIndex);
       if (endIndex != -1) {
-        region = jsonResponse.substring(startIndex + length, endIndex - 1);
+        region = jsonResponse.substring(startIndex + length10, endIndex - 1);
       }
     }
     return city + ", " + region + ", " + country;
